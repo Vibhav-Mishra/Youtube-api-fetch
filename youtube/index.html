@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    *{
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    #search_results {
+        display: grid;
+        grid-template-columns: repeat(4, 20%);
+        grid-gap: 5%;
+    }
+
+    #search {
+        cursor:text;
+        font-size: larger;
+        padding: 10px;
+        margin: 6px;
+        height: 14px;
+        margin-left: 115px;
+        width: 540px;
+    }
+
+    .nav {
+        height: 50px;
+        width: 100%;
+        display: flex;
+        border: 1px solid red;
+    }
+
+    .nav button {
+        cursor: pointer;
+        margin-left: -6px;
+        margin-top: 5px;
+        border: 0.5px solid rgb(194, 194, 194);
+        /* margin: 5px; */
+        height: 40px;
+        width: 60px;
+    }
+    .nav img{
+        height: 35px;
+        margin: 12px;
+    }
+    .nav h2{
+        font-size:23px;
+        margin-left: -22px;
+        margin-top: 10px;
+    }
+    .nav h5{
+        font-size:11px;
+        color: rgb(92, 92, 92);
+        margin-top: 10px;
+    }
+     #ham{
+        cursor: pointer;
+        margin: 12px;
+        height: 25px;
+        width: 25px;
+    }
+    #ham:hover{
+        background-color: grey;
+    }
+    #search_but{
+        cursor: pointer;
+        height: 22px;
+        width: 22px;
+        margin-top: 10px;
+    }
+    #voice{
+        cursor: pointer;
+        height: 20px;
+        width:23px;
+        margin: 11px;
+        /* margin-top: 10px; */
+        /* margin-left: 12px; */
+        border-radius: 30px 30px;
+    }
+    #voicemain{
+        margin: 6px;
+        width: 45px;
+        height: 40px;
+        border-radius: 30px 30px;
+        background-color: whitesmoke;
+    }
+
+    #corner{
+        /* border: 1px solid red; */
+        height: 40px;
+        padding-top: -15px;
+        padding-left:100px;
+    }
+    #corner>img{
+        height: 28px;
+    }
+    /* #vid_upload{ */
+        /* margin-right: -100px; */
+        /* margin-right: -100px; */
+    /* } */
+    /* #profile{ */
+        /* margin-left: 350px; */
+        /* border: 1px solid red; */
+    /* } */
+    /* #bell{ */
+        /* margin-left: -300px; */
+    /* } */
+    
+</style>
+
+<body>
+    <div class="nav">
+         <img id="ham" src="https://assets.stickpng.com/images/588a6507d06f6719692a2d15.png" alt=""> 
+         <img src="https://www.clipartmax.com/png/full/134-1347559_non-copyright-youtube-logo.png" alt=""> 
+         <h2>YouTube </h2> 
+         <h5>IN</h5>    
+
+
+
+        <input type="text" placeholder="Search" id="search">
+
+        <button onclick="searchVideos()"><i class="fa fa-search"> <img id="search_but" src="https://www.freeiconspng.com/thumbs/search-icon-png/search-icon-png-5.png" alt=""> </i> </button>
+        <div id="voicemain"> <img id="voice" src="https://w7.pngwing.com/pngs/149/563/png-transparent-microphone-google-voice-search-google-search-microphone-electronics-microphone-computer.png" alt=""> </div>
+
+        <div id="corner">
+        <img id="vid_upload" src="https://mpng.subpng.com/20180623/rkc/kisspng-video-cameras-logo-computer-icons-video-recorder-5b2f0bdaaa8fc4.8979393915298098826986.jpg" alt="">
+
+        <img id="apps" src="https://icon-library.com/images/google-apps-icon-png/google-apps-icon-png-27.jpg" alt="">
+
+
+        <img id="bell" src="https://icon2.cleanpng.com/20180712/fli/kisspng-computer-icons-download-clip-art-notification-icon-5b46fd83270e47.90471974153137907516.jpg" alt="">
+
+        <img id="profile" src="https://www.pinclipart.com/picdir/middle/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="">
+
+    
+
+    </div>
+     
+       </div>
+
+    <div id="search_results"></div>
+
+</body>
+
+</html>
+
+<script>
+
+    // youtube API - Reading Documentation 
+
+    // array of object
+
+    // append
+
+    //find the url
+
+    // https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=football&key=[YOUR_API_KEY] \
+
+
+    //api key --  AIzaSyDApf2Qy3OesZh10evtFG6OOgPNL6mPiAo
+
+    const search_results_div = document.getElementById("search_results");
+
+    const searchVideos = async () => {
+        try {
+            let inp = document.getElementById("search").value;
+
+            let res = await fetch(
+                `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${inp}&key=AIzaSyDApf2Qy3OesZh10evtFG6OOgPNL6mPiAo&maxResults=20`
+            );
+
+            let data = await res.json();
+
+            let videos = data.items;
+            // console.log("videos", videos);
+
+            appendVideos(videos)
+
+            // return videos;
+
+        } catch (error) {
+            console.log("error:", error);
+        }
+    };
+
+    const appendVideos = (data) => {
+        // search_results_div.innerHTML = null;
+        try {
+            data.forEach((elem) => {
+                let div1 = document.createElement("div");
+
+                let title = document.createElement("p");
+
+                name.innerText = elem.snippet.title;
+
+                let iframe = document.createElement("iframe");
+
+                iframe.src = `https://www.youtube.com/embed/${elem.id.videoId}`;
+
+                iframe.height = "100%"
+                iframe.width = "100%";
+                iframe.allow = "fullscreen";
+
+                div1.append(iframe, title);
+
+                search_results_div.append(div1);
+            });
+        }
+        catch {
+            console.log("error:", error);
+        }
+    };
+
+
+//embed - adding something
+//do you want to add a video to your app?
+//i want to embed my video
+//embed url -  "https://www.youtube.com/embed/cWfcWGcTL2k"
+
+
+</script>
